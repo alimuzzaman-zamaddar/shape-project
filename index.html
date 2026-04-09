@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peak Purpose – Your Why Cutout</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #f1f5f9;
+      color: #1e293b;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      padding: 1rem;
+    }
+    @media (min-width: 640px) { body { padding: 2rem; } }
+
+    .wrapper {
+      max-width: 1152px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .header h1 { font-size: 1.75rem; font-weight: 700; }
+    .header p  { margin-top: .5rem; font-size: .875rem; color: #64748b; }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    @media (min-width: 1024px) {
+      .grid { grid-template-columns: 280px 1fr; }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .sidebar h2 { font-size: 1.125rem; font-weight: 600; }
+
+    .section-label {
+      font-size: .875rem;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: .5rem;
+    }
+    .mt4  { margin-top: 1rem; }
+    .mt6  { margin-top: 1.5rem; }
+
+    /* Shape buttons */
+    .shape-btns { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .shape-btn {
+      border: none;
+      cursor: pointer;
+      border-radius: .5rem;
+      padding: .4rem 1rem;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background .15s, color .15s;
+      background: #f1f5f9;
+      color: #334155;
+      text-transform: capitalize !important;
+      
+    }
+    .shape-btn:hover   { background: #e2e8f0; }
+    .shape-btn.active  { background: #4f46e5; color: #fff; }
+
+    /* Upload btn */
+    .upload-label {
+      display: inline-flex;
+      cursor: pointer;
+      border-radius: .5rem;
+      background: #059669;
+      color: #fff;
+      padding: .4rem 1rem;
+      font-size: .875rem;
+      font-weight: 500;
+      transition: background .15s;
+    }
+    .upload-label:hover { background: #047857; }
+
+    /* Thumbnails */
+    .thumb-section-label {
+      font-size: .6875rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: .75rem;
+    }
+    .thumbs-row {
+      display: flex;
+      gap: .75rem;
+      overflow-x: auto;
+      padding-bottom: .5rem;
+    }
+    .thumb-item {
+      position: relative;
+      flex-shrink: 0;
+      width: 90px;
+      height: 90px;
+    }
+    .thumb-card {
+      width: 100%;
+      height: 100%;
+      border-radius: .75rem;
+      overflow: hidden;
+      border: 1.5px solid #b8960c;
+      background: #1a1a1a;
+    }
+    .thumb-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb-num {
+      position: absolute;
+      bottom: 4px; left: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,.8);
+    }
+    .thumb-remove {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.65);
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .thumbs-empty {
+      height: 90px;
+      border-radius: .75rem;
+      background: #1a1a1a;
+      border: 1.5px dashed #b8960c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .thumbs-empty p { font-size: .75rem; color: #b8960c; }
+
+    /* Radio */
+    .radio-group { display: flex; flex-direction: column; gap: .5rem; }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .875rem;
+      color: #334155;
+      cursor: pointer;
+    }
+    .radio-label input { accent-color: #4f46e5; }
+
+    /* Download btn */
+    .download-btn {
+      width: 100%;
+      border: none;
+      border-radius: .5rem;
+      padding: .5rem 1rem;
+      font-size: .875rem;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      transition: background .15s;
+      background: #4f46e5;
+    }
+    .download-btn:hover:not(:disabled) { background: #4338ca; }
+    .download-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .download-hint { margin-top: .25rem; font-size: .75rem; color: #94a3b8; }
+
+    /* Canvas area */
+    .canvas-area {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+
+    /* Shape container */
+    .shape-wrap { position: relative; }
+    .shape-inner {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #a5b4fc;
+      background: rgba(238,242,255,.4);
+      box-shadow: 0 4px 24px rgba(0,0,0,.1);
+    }
+    .hole-indicator {
+      pointer-events: none;
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid #94a3b8;
+      background: #f1f5f9;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Draggable image */
+    .img-handle {
+      position: absolute;
+      cursor: move;
+      user-select: none;
+    }
+    .img-handle img {
+      width: 100%; height: 100%;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+    .resize-handle {
+      position: absolute;
+      width: 14px; height: 14px;
+      bottom: 0; right: 0;
+      cursor: se-resize;
+      background: rgba(79,70,229,.7);
+      border-radius: 3px 0 3px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <header class="header">
+    <h1>PEAK PURPOSE</h1>
+    <p>YOUR WHY CUTOUT</p>
+  </header>
+
+  <section class="grid">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Controls</h2>
+
+      <div class="mt4">
+        <p class="section-label">Choose shape</p>
+        <div class="shape-btns" id="shape-btns"></div>
+      </div>
+
+      <div class="mt6">
+        <label class="upload-label" for="image-upload">Upload Images</label>
+        <input id="image-upload" type="file" accept="image/*" multiple style="display:none" />
+      </div>
+
+      <div class="mt6">
+        <p class="thumb-section-label">Uploaded Photos</p>
+        <div id="thumbs-container"></div>
+      </div>
+
+      <div class="mt6">
+        <p class="section-label">Hole in download</p>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="hole-option" value="with" checked /> With hole
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="hole-option" value="without" /> Without hole
+          </label>
+        </div>
+      </div>
+
+      <div class="mt6">
+        <button class="download-btn" id="download-btn" disabled>⬇ Download Shape</button>
+        <p class="download-hint" id="download-hint">Upload at least one image to download.</p>
+      </div>
+    </aside>
+
+    <!-- Canvas -->
+    <div class="canvas-area">
+      <div class="shape-wrap" id="shape-wrap">
+        <div class="shape-inner" id="shape-inner">
+          <!-- images rendered here -->
+        </div>
+        <div class="hole-indicator" id="hole-indicator"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  /* ── SHAPES ── */
+  const SHAPES = {
+    tag: {
+      label: 'Tag Shap',
+      width: 360,
+      height: 520,
+      clipPath: 'polygon(50% 0%, 92% 18%, 100% 28%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 28%, 8% 18%)',
+      svgClipId: 'tag-clip',
+      hole: { size: 20, x: 50, y: 10 },
+      buildPath(W, H, ox, oy) {
+        const p = new Path2D();
+        p.moveTo(W*.5+ox, oy);
+        p.lineTo(W*.92+ox, H*.18+oy);
+        p.bezierCurveTo(W*.96+ox, H*.2+oy, W+ox, H*.24+oy, W+ox, H*.28+oy);
+        p.lineTo(W+ox, H*.92+oy);
+        p.bezierCurveTo(W+ox, H*.96+oy, W*.96+ox, H+oy, W*.92+ox, H+oy);
+        p.lineTo(W*.08+ox, H+oy);
+        p.bezierCurveTo(W*.04+ox, H+oy, ox, H*.96+oy, ox, H*.92+oy);
+        p.lineTo(ox, H*.28+oy);
+        p.bezierCurveTo(ox, H*.24+oy, W*.04+ox, H*.2+oy, W*.08+ox, H*.18+oy);
+        p.closePath();
+        return p;
+      },
+    },
+    droplet: {
+      label: 'Teardrop Shape',
+      width: 400,
+      height: 600,
+      clipPath: 'path("M 200 0 C 200 0 400 180 400 390 C 400 504 311 600 200 600 C 89 600 0 504 0 390 C 0 180 200 0 200 0 Z")',
+      svgClipId: 'teardrop-clip',
+      hole: { size: 20, x: 50, y: 12 },
+      buildPath(W, H, ox, oy) {
+        const p = new Path2D();
+        p.moveTo(W*.5+ox, oy);
+        p.bezierCurveTo(W*.5+ox, oy, W+ox, H*.3+oy, W+ox, H*.65+oy);
+        p.bezierCurveTo(W+ox, H*.84+oy, W*.78+ox, H+oy, W*.5+ox, H+oy);
+        p.bezierCurveTo(W*.22+ox, H+oy, ox, H*.84+oy, ox, H*.65+oy);
+        p.bezierCurveTo(ox, H*.3+oy, W*.5+ox, oy, W*.5+ox, oy);
+        p.closePath();
+        return p;
+      },
+    },
+  };
+
+  const MIN_IMAGE_SIZE = 80;
+  const BORDER = 10;
+
+  /* ── STATE ── */
+  let selectedShape = 'tag';
+  let images = [];         // { id, name, src, x, y, width, height }
+  let isDownloading = false;
+
+  /* ── DOM REFS ── */
+  const shapeBtns      = document.getElementById('shape-btns');
+  const imageUpload    = document.getElementById('image-upload');
+  const thumbsContainer= document.getElementById('thumbs-container');
+  const downloadBtn    = document.getElementById('download-btn');
+  const downloadHint   = document.getElementById('download-hint');
+  const shapeWrap      = document.getElementById('shape-wrap');
+  const shapeInner     = document.getElementById('shape-inner');
+  const holeIndicator  = document.getElementById('hole-indicator');
+
+  /* ── SHAPE BUTTONS ── */
+  Object.entries(SHAPES).forEach(([key, shape]) => {
+    const btn = document.createElement('button');
+    btn.className = 'shape-btn' + (key === selectedShape ? ' active' : '');
+    btn.textContent = shape.label;
+    btn.onclick = () => selectShape(key);
+    shapeBtns.appendChild(btn);
+  });
+
+  function selectShape(key) {
+    selectedShape = key;
+    document.querySelectorAll('.shape-btn').forEach((b, i) => {
+      b.classList.toggle('active', Object.keys(SHAPES)[i] === key);
+    });
+    applyShape();
+  }
+
+  function applyShape() {
+    const cfg = SHAPES[selectedShape];
+    shapeInner.style.width  = cfg.width  + 'px';
+    shapeInner.style.height = cfg.height + 'px';
+    shapeInner.style.clipPath = cfg.clipPath;
+    shapeWrap.style.width   = cfg.width  + 'px';
+    shapeWrap.style.height  = cfg.height + 'px';
+    // Hole
+    const h = cfg.hole;
+    holeIndicator.style.width  = h.size + 'px';
+    holeIndicator.style.height = h.size + 'px';
+    holeIndicator.style.left   = h.x + '%';
+    holeIndicator.style.top    = h.y + '%';
+  }
+  applyShape();
+
+  /* ── UPLOAD ── */
+  imageUpload.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const cfg = SHAPES[selectedShape];
+    files.forEach(file => {
+      const url = URL.createObjectURL(file);
+      const w = Math.max(MIN_IMAGE_SIZE, Math.floor(cfg.width  * 0.4));
+      const h = Math.max(MIN_IMAGE_SIZE, Math.floor(cfg.height * 0.4));
+      images.push({ id: file.name + '-' + Math.random().toString(36).slice(2), name: file.name, src: url, x: 10, y: 10, width: w, height: h });
+    });
+    e.target.value = '';
+    render();
+  });
+
+  /* ── REMOVE ── */
+  function removeImage(id) {
+    const img = images.find(i => i.id === id);
+    if (img) URL.revokeObjectURL(img.src);
+    images = images.filter(i => i.id !== id);
+    render();
+  }
+
+  /* ── RENDER ── */
+  function render() {
+    renderThumbs();
+    renderCanvas();
+    syncDownloadBtn();
+  }
+
+  function renderThumbs() {
+    if (!images.length) {
+      thumbsContainer.innerHTML = '<div class="thumbs-empty"><p>No photos uploaded yet</p></div>';
+      return;
+    }
+    thumbsContainer.innerHTML = '';
+    const row = document.createElement('div');
+    row.className = 'thumbs-row';
+    images.forEach((img, idx) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'thumb-item';
+      wrap.innerHTML = `
+        <div class="thumb-card"><img src="${img.src}" alt="${img.name}" /></div>
+        <span class="thumb-num">${String(idx + 1).padStart(2, '0')}</span>
+        <button class="thumb-remove" data-id="${img.id}">×</button>
+      `;
+      row.appendChild(wrap);
+    });
+    thumbsContainer.appendChild(row);
+    thumbsContainer.querySelectorAll('.thumb-remove').forEach(btn => {
+      btn.onclick = () => removeImage(btn.dataset.id);
+    });
+  }
+
+  function renderCanvas() {
+    shapeInner.innerHTML = '';
+    images.forEach(img => {
+      const handle = document.createElement('div');
+      handle.className = 'img-handle';
+      handle.style.left   = img.x + 'px';
+      handle.style.top    = img.y + 'px';
+      handle.style.width  = img.width + 'px';
+      handle.style.height = img.height + 'px';
+      handle.dataset.id   = img.id;
+
+      const el = document.createElement('img');
+      el.src = img.src;
+      el.alt = img.name;
+      el.draggable = false;
+      handle.appendChild(el);
+
+      const resizer = document.createElement('div');
+      resizer.className = 'resize-handle';
+      handle.appendChild(resizer);
+
+      shapeInner.appendChild(handle);
+
+      makeDraggable(handle, img);
+      makeResizable(resizer, handle, img);
+    });
+  }
+
+  function syncDownloadBtn() {
+    const hasImages = images.length > 0;
+    downloadBtn.disabled = !hasImages || isDownloading;
+    downloadHint.style.display = hasImages ? 'none' : 'block';
+  }
+
+  /* ── DRAG ── */
+  function makeDraggable(el, img) {
+    let startX, startY, startLeft, startTop;
+    el.addEventListener('mousedown', onMouseDown);
+    el.addEventListener('touchstart', onTouchStart, { passive: false });
+
+    function onMouseDown(e) {
+      if (e.target.classList.contains('resize-handle')) return;
+      e.preventDefault();
+      startX = e.clientX; startY = e.clientY;
+      startLeft = img.x; startTop = img.y;
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    }
+    function onTouchStart(e) {
+      if (e.target.classList.contains('resize-handle')) return;
+      e.preventDefault();
+      const t = e.touches[0];
+      startX = t.clientX; startY = t.clientY;
+      startLeft = img.x; startTop = img.y;
+      document.addEventListener('touchmove', onTouchMove, { passive: false });
+      document.addEventListener('touchend', onTouchEnd);
+    }
+    function onMouseMove(e) {
+      move(e.clientX, e.clientY);
+    }
+    function onTouchMove(e) {
+      e.preventDefault();
+      move(e.touches[0].clientX, e.touches[0].clientY);
+    }
+    function move(cx, cy) {
+      const cfg = SHAPES[selectedShape];
+      const dx = cx - startX, dy = cy - startY;
+      img.x = Math.max(0, Math.min(cfg.width  - img.width,  startLeft + dx));
+      img.y = Math.max(0, Math.min(cfg.height - img.height, startTop  + dy));
+      el.style.left = img.x + 'px';
+      el.style.top  = img.y + 'px';
+    }
+    function onMouseUp()  { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); }
+    function onTouchEnd() { document.removeEventListener('touchmove', onTouchMove); document.removeEventListener('touchend', onTouchEnd); }
+  }
+
+  /* ── RESIZE ── */
+  function makeResizable(resizer, el, img) {
+    let startX, startY, startW, startH;
+    resizer.addEventListener('mousedown', onDown);
+    resizer.addEventListener('touchstart', onTouchDown, { passive: false });
+
+    function onDown(e) {
+      e.stopPropagation(); e.preventDefault();
+      startX = e.clientX; startY = e.clientY;
+      startW = img.width; startH = img.height;
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    }
+    function onTouchDown(e) {
+      e.stopPropagation(); e.preventDefault();
+      const t = e.touches[0];
+      startX = t.clientX; startY = t.clientY;
+      startW = img.width; startH = img.height;
+      document.addEventListener('touchmove', onTouchMove, { passive: false });
+      document.addEventListener('touchend', onTouchUp);
+    }
+    function onMove(e) { doResize(e.clientX, e.clientY); }
+    function onTouchMove(e) { e.preventDefault(); doResize(e.touches[0].clientX, e.touches[0].clientY); }
+    function doResize(cx, cy) {
+      const cfg = SHAPES[selectedShape];
+      img.width  = Math.max(MIN_IMAGE_SIZE, Math.min(cfg.width  - img.x, startW + (cx - startX)));
+      img.height = Math.max(MIN_IMAGE_SIZE, Math.min(cfg.height - img.y, startH + (cy - startY)));
+      el.style.width  = img.width  + 'px';
+      el.style.height = img.height + 'px';
+    }
+    function onUp()       { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
+    function onTouchUp()  { document.removeEventListener('touchmove', onTouchMove); document.removeEventListener('touchend', onTouchUp); }
+  }
+
+  /* ── DOWNLOAD ── */
+  downloadBtn.addEventListener('click', async () => {
+    if (!images.length || isDownloading) return;
+    isDownloading = true;
+    downloadBtn.textContent = 'Generating…';
+    downloadBtn.disabled = true;
+
+    try {
+      const cfg = SHAPES[selectedShape];
+      const W = cfg.width, H = cfg.height;
+      const totalW = W + BORDER * 2, totalH = H + BORDER * 2;
+      const offscreen = document.createElement('canvas');
+      offscreen.width = totalW; offscreen.height = totalH;
+      const ctx = offscreen.getContext('2d');
+
+      const buildPath = (ox, oy) => cfg.buildPath(W, H, ox, oy);
+      ctx.save();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = BORDER * 2;
+      ctx.lineJoin = 'round';
+      ctx.stroke(buildPath(BORDER, BORDER));
+      ctx.restore();
+      ctx.save();
+      ctx.clip(buildPath(BORDER, BORDER));
+      ctx.fillStyle = '#eef2ff';
+      ctx.fillRect(0, 0, totalW, totalH);
+
+      // Draw images
+      for (const img of images) {
+        await new Promise((resolve) => {
+          const el = new Image();
+          el.crossOrigin = 'anonymous';
+          el.onload  = () => { ctx.drawImage(el, img.x + BORDER, img.y + BORDER, img.width, img.height); resolve(); };
+          el.onerror = resolve;
+          el.src = img.src;
+        });
+      }
+      ctx.restore();
+
+      // Hole
+      const downloadWithHole = document.querySelector('input[name="hole-option"]:checked').value === 'with';
+      if (downloadWithHole) {
+        const hole = cfg.hole;
+        const holeCx = (hole.x / 100) * W + BORDER;
+        const holeCy = (hole.y / 100) * H + BORDER;
+        const holeR  = hole.size / 2;
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(holeCx, holeCy, holeR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.strokeStyle = 'rgba(180,180,180,0.8)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(holeCx, holeCy, holeR, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      const link = document.createElement('a');
+      link.download = `peak-purpose-${selectedShape}${downloadWithHole ? '-with-hole' : '-no-hole'}.png`;
+      link.href = offscreen.toDataURL('image/png');
+      link.click();
+    } finally {
+      isDownloading = false;
+      downloadBtn.textContent = '⬇ Download Shape';
+      syncDownloadBtn();
+    }
+  });
+  render();
+})();
+</script>
+</body>
+</html>
