@@ -4,218 +4,391 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Peak Purpose – Sticker Group Creator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    /* --- PEAK PURPOSE THEME VARIABLES --- */
+    :root {
+      --gold: #C9A84C;
+      --gold-lt: rgba(201,168,76,0.15);
+      --gold-dk: #8B6914;
+      --black: #111111;
+      --cream: #F5F0E8;
+      --cream-2: #EDE8DF;
+      --off: #FFFFFF;
+      --ink: #1a1a1a;
+      --muted: #6B6560;
+      --border: #DDD8CE;
+      --r: 10px;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
-      background: #f1f5f9;
-      color: #1a1411;
-      font-family: 'Inter', system-ui, sans-serif;
-      padding: 1rem;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
     }
 
-    .wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* --- HEADER --- */
+    .hdr {
+      background: var(--gold);
+      border-bottom: 3px solid var(--gold-dk);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-size: 24px; color: var(--black); letter-spacing: 3px; line-height: 1; font-weight: 700; }
+    .logo-sub { font-size: 12px; color: var(--gold-dk); letter-spacing: 3px; text-transform: uppercase; }
+
+    .wrapper { max-width: 1300px; margin: 0 auto; }
+
+    .grid { display: grid; gap: 0; }
+    @media (min-width: 1024px) {
+      .grid { grid-template-columns: 420px 1fr; min-height: calc(100vh - 54px); }
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+      background: var(--cream);
+      padding: 36px 32px;
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 28px;
     }
 
-    .header {
-      background: #fff;
-      border-radius: 1rem;
-      padding: 1.25rem 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    .step-label {
+      font-size: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dk);
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .header h1 { font-size: 1.75rem; font-weight: 700; color: #1a1411; }
-
-    .grid {
-      display: grid;
-      gap: 1.5rem;
-    }
-    @media (min-width: 1024px) {
-      .grid { grid-template-columns: 280px 1fr; }
-    }
-
-    .sidebar {
-      background: #fff;
-      border-radius: 1rem;
-      padding: 1.25rem 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08);
-    }
-
-    .section-label { font-size: .875rem; font-weight: 600; margin-bottom: .5rem; color: #64748b; }
-    .mt6 { margin-top: 1.5rem; }
+    .step-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
     .upload-label {
-      display: inline-flex;
+      display: block;
       cursor: pointer;
-      border-radius: 50px;
-      background: #1a1411;
-      color: #fff;
-      padding: .6rem 1.5rem;
-      font-size: .875rem;
-      font-weight: 600;
+      border-radius: var(--r);
+      background: var(--gold);
+      color: var(--black);
+      padding: 16px 18px;
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 3px;
       transition: opacity 0.2s;
+      border: none;
+      width: 100%;
+      font-weight: 600;
     }
     .upload-label:hover { opacity: 0.9; }
 
-    /* --- UPDATED THUMBNAILS DESIGN --- */
-    .thumbs-row {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      padding: 1rem 0.5rem;
-      scrollbar-width: none;
-    }
-    .thumbs-row::-webkit-scrollbar { display: none; }
-
-    .thumb-item { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
-    
+    .thumbs-row { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; min-height: 105px; }
+    .thumb-item { position: relative; width: 85px; height: 85px; flex-shrink: 0; }
     .thumb-card { 
-        width: 100%; 
-        height: 100%; 
-        border-radius: 12px; 
-        overflow: hidden; 
-        background: #1a1411; 
-        position: relative;
-        padding: 2px; /* Gap for gradient border */
-        background: linear-gradient(135deg, #d4af37 0%, #1a1411 50%, #d4af37 100%);
+      width: 100%; height: 100%; border-radius: var(--r); 
+      overflow: hidden; background: linear-gradient(135deg, var(--gold) 0%, var(--black) 50%, var(--gold) 100%);
+      padding: 2px;
     }
-    .thumb-card img { 
-      width: 100%; 
-      height: 100%; 
-      object-fit: cover; 
-      border-radius: 10px;
-      display: block;
-    }
-    
+    .thumb-card img, .thumb-card div { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; background: var(--off); }
     .thumb-remove {
-      position: absolute; 
-      top: 6px; 
-      right: 6px;
-      width: 22px; 
-      height: 22px; 
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.7); 
-      color: white; 
-      border: 1px solid rgba(255, 255, 255, 0.3); 
-      cursor: pointer;
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 12px;
-      z-index: 10;
+      position: absolute; top: -5px; right: -5px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #ff4444; color: white; border: 2px solid white; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 5;
     }
 
     /* --- CANVAS AREA --- */
-    .canvas-area {
-      background: rgba(0, 0, 0, 0.09);
-      border-radius: 1rem;
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
-      overflow: auto;
-      min-height: 600px;
-    }
-
-    .page-inner {
+    .canvas-container { padding: 28px; }
+    .canvas-bg {
       position: relative;
-      background: #fff;
-      background-image: radial-gradient(rgba(0,0,0,0.1) 1px, transparent 1px);
-      background-size: 20px 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      background: var(--off);
+      background-image: repeating-conic-gradient(var(--border) 0% 25%, var(--cream-2) 0% 50%) 0 0/20px 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      width: 100%;
+      height: 500px;
     }
 
-    .img-handle { position: absolute; cursor: move; touch-action: none; }
-    .img-handle img { width: 100%; height: 100%; display: block; pointer-events: none; }
+    .img-handle, .text-handle { position: absolute; cursor: move; touch-action: none; user-select: none; }
+    .img-handle img { width: 100%; height: 100%; pointer-events: none; }
     
     .resize-handle {
-      position: absolute; width: 16px; height: 16px;
-      bottom: -8px; right: -8px; cursor: se-resize;
-      background: #4f46e5; border: 2px solid white; border-radius: 50%;
-      z-index: 100;
+      position: absolute; width: 16px; height: 16px; bottom: -8px; right: -8px; 
+      cursor: se-resize; background: var(--gold); border: 2px solid var(--off); border-radius: 50%; z-index: 100;
     }
 
     .download-btn {
-      width: 100%; border: none; border-radius: 50px; height: 52px;
-      padding: 0.8rem; font-weight: 600; color: #fff;
-      background: #4f46e5; cursor: pointer; margin-top: 1rem;
-      transition: transform 0.1s;
+      width: 100%; padding: 16px 18px; background: transparent; 
+      border: 1px solid var(--gold); border-radius: var(--r);
+      color: var(--gold); font-size: 18px; letter-spacing: 3px; cursor: pointer;
+      transition: all 0.2s; font-weight: 600;
     }
-    .download-btn:active { transform: scale(0.98); }
-    .download-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .download-btn:hover:not(:disabled) { background: var(--gold); color: var(--black); }
+    .download-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* --- SUMMARY CARD --- */
+    .right {
+      background: var(--off); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 28px;
+    }
+    .prev-lbl {
+      font-size: 24px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--gold-dk); font-weight: 700; margin-bottom: 16px;
+      border-bottom: 1px solid var(--gold-lt); padding-bottom: 10px;
+    }
+    .orow { display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 12px; }
+    .orow span:first-child { color: var(--muted); }
+    .orow.tot { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 18px; font-weight: 700; }
+
+    .btn-fill {
+      width: 100%; background: var(--black); color: var(--gold); border: none;
+      padding: 16px 18px; border-radius: var(--r); font-weight: 700; font-size: 16px;
+      cursor: pointer; margin-top: 24px; transition: transform 0.1s;
+    }
+    .btn-fill:active { transform: scale(0.98); }
+    .btn-fill:disabled { opacity: 0.3; }
+
+    .text-input {
+      width: 100%; padding: 12px; border: 1px solid var(--border);
+      border-radius: 6px; font-size: 16px;
+    }
+
+    .scheme-btn { flex: 1; height: 36px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer; }
+
+.tog-ed {
+      flex: 1;
+      padding: 18px; /* Matched high presence padding */
+      border: 1px solid var(--border);
+      background: var(--off);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 400;
+      text-align: left;
+      transition: all 0.2s;
+    }
+    .tog-ed strong { font-size: 17px; display: block; margin-bottom: 2px; }
+    .tog-ed.on { 
+      border: 2px solid var(--gold); 
+      background: var(--gold-lt); 
+      box-shadow: 0 4px 12px rgba(201, 168, 76, 0.1);
+    }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+
+    /* --- PREVIEW MODAL --- */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center;
+      z-index: 1000; padding: 20px;
+    }
+    .modal-content {
+      background: var(--cream); border-radius: 12px; padding: 24px; max-width: 95%; max-height: 95%;
+      display: flex; flex-direction: column; align-items: center; position: relative;
+    }
+    .modal-content img { max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .close-modal {
+      position: absolute; top: -15px; right: -15px; width: 40px; height: 40px;
+      background: var(--gold); color: var(--black); border-radius: 50%; border: none;
+      font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
   </style>
 </head>
 <body>
 
-<div class="wrapper">
-  <header class="header">
-    <h1>PEAK PURPOSE</h1>
-    <p>Unified Sticker Creator — All images form one single border</p>
-  </header>
+<header class="hdr">
+  <svg width="28" height="28" viewBox="0 0 28 28">
+    <polygon points="14,3 26,23 2,23" fill="none" stroke="#111" stroke-width="1.5"/>
+    <polygon points="14,9 22,23 6,23" fill="#111" opacity="0.25"/>
+  </svg>
+  <div>
+    <div class="logo">Peak Purpose</div>
+    <div class="logo-sub">Unified Sticker Creator</div>
+  </div>
+</header>
 
+<div class="wrapper">
   <section class="grid">
     <aside class="sidebar">
-      <div class="mt6">
-        <p class="section-label">1. UPLOAD</p>
+      <div>
+        <div class="step-label">01 — Photos</div>
         <label class="upload-label" for="image-upload">Add New Photos</label>
         <input id="image-upload" type="file" accept="image/*" multiple style="display:none" />
       </div>
 
-      <div class="mt6">
-        <p class="section-label">2. LAYERS</p>
+      <div>
+        <div class="step-label">02 — Layers</div>
         <div id="thumbs-container" class="thumbs-row"></div>
       </div>
 
-      <div class="mt6">
-        <button class="download-btn" id="download-btn" disabled>Download Unified Sticker</button>
+      <div>
+        <div class="step-label">03 — Text</div>
+        <div class="input-group" style="display: flex; gap: 8px;">
+          <input type="text" id="text-input-val" class="text-input" placeholder="Enter text...">
+          <button class="upload-label" id="add-text-btn" style="width: 80px; padding: 10px; font-size: 14px;">Add</button>
+        </div>
+        <div id="text-controls" style="margin-top: 15px; display: none; padding: 12px; background: var(--off); border-radius: 8px; border: 1px solid var(--border);">
+          <label style="font-size: 10px; color: var(--gold-dk); font-weight: 700;">SIZE</label>
+          <input type="range" id="text-size-slider" min="20" max="150" value="60" style="width: 100%; margin: 10px 0;">
+          <div class="scheme-row" id="individual-colors" style="display:flex; gap:5px;">
+            <button class="scheme-btn" data-color="#111111" style="background:#111111"></button>
+            <button class="scheme-btn" data-color="#C9A84C" style="background:#C9A84C"></button>
+            <button class="scheme-btn" data-color="#FFFFFF" style="background:#FFFFFF"></button>
+            <button class="scheme-btn" data-color="#FF0000" style="background:#FF0000"></button>
+          </div>
+        </div>
       </div>
+
+<div>
+        <div class="step-label">04 — Options</div>
+        <div class="btn-stack" id="placement-group">
+          <button class="tog-ed on" onclick="setEdition('Print', this)">
+            <strong>Print Edition</strong><small>Die cut cardstock</small>
+          </button>
+          
+          <button class="tog-ed on" onclick="setPlacement('Car mirror Tag', 15, this)">
+            <strong>Car mirror Tag</strong><small>$15.00</small>
+          </button>
+          
+          <button class="tog-ed" onclick="setPlacement('Desk Poster', 25, this)">
+            <strong>Desk Poster</strong><small>$25.00</small>
+          </button>
+          
+          <button class="tog-ed" onclick="setPlacement('Door Poster', 40, this)">
+            <strong>Door Poster</strong><small>$40.00</small>
+          </button>
+        </div>
+      </div>
+      <button class="download-btn" id="preview-trigger-btn" disabled>Generate Preview</button>
     </aside>
 
-    <div class="canvas-area">
-      <div class="page-inner" id="page-inner" style="width: 1123px; height: 794px;"></div>
-    </div>
+    <main class="canvas-area">
+      <div class="canvas-container">
+        <div style="font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-weight: 700;">Live Editor Workspace</div>
+        <div class="canvas-bg" id="page-inner"></div>
+        <div class="right">
+          <div class="prev-lbl">Order Summary</div>
+          <div class="orow"><span>Edition</span><span id="sEd">Print</span></div>
+          <div class="orow"><span>Placement</span><span id="sSku">Mirror Tag</span></div>
+          <div class="orow"><span>Layers</span><span id="sPhotos">0 layers</span></div>
+          <div class="orow tot"><span>Total</span><span id="sPrice">$15</span></div>
+          <button class="btn-fill" id="orderBtn" disabled onclick="submitOrder()">Place Order</button>
+        </div>
+      </div>
+    </main>
   </section>
+</div>
+
+<div id="preview-modal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="close-modal" id="close-modal">✕</button>
+    <div class="prev-lbl" style="border:none; margin-bottom:20px;">Your Sticker Preview</div>
+    <div id="modal-image-container"></div>
+    <button class="btn-fill" style="width:220px;" onclick="document.getElementById('preview-modal').style.display='none'">Return to Editor</button>
+  </div>
 </div>
 
 <script>
 (function () {
-  const PAGE = { width: 1123, height: 794 };
-  const API_KEY = 'gsmknu7wkzSQPmRyzcr2z8UG'; 
-  let images = [];
+  const API_KEY = 'LwJj5CNMGDbPGx7zf4X1KmiZ'; 
+  let layers = []; 
+  let selectedLayerId = null;
+  let currentEdition = "Print";
+  let currentPlacement = "Car mirror Tag";
+  let currentPrice = 15;
 
   const imageUpload = document.getElementById('image-upload');
   const thumbsContainer = document.getElementById('thumbs-container');
-  const downloadBtn = document.getElementById('download-btn');
+  const previewTriggerBtn = document.getElementById('preview-trigger-btn');
   const pageInner = document.getElementById('page-inner');
+  const addTextBtn = document.getElementById('add-text-btn');
+  const textInputVal = document.getElementById('text-input-val');
+  const textControls = document.getElementById('text-controls');
+  const modal = document.getElementById('preview-modal');
+  const modalContainer = document.getElementById('modal-image-container');
+
+  // --- UI UPDATES ---
+  window.setEdition = function(val, el) {
+    currentEdition = val;
+    el.parentNode.querySelectorAll('.tog-ed').forEach(btn => btn.classList.remove('on'));
+    el.classList.add('on');
+    updateSummary();
+  }
+
+  window.setPlacement = function(val, price, el) {
+    currentPlacement = val;
+    currentPrice = price;
+    document.getElementById('placement-group').querySelectorAll('.tog-ed').forEach(btn => btn.classList.remove('on'));
+    el.classList.add('on');
+    updateSummary();
+  }
+
+  function updateSummary() {
+    document.getElementById('sEd').innerText = currentEdition;
+    document.getElementById('sSku').innerText = currentPlacement;
+    document.getElementById('sPhotos').innerText = layers.length + " layers";
+    document.getElementById('sPrice').innerText = "$" + currentPrice;
+    const hasLayers = layers.length > 0;
+    document.getElementById('orderBtn').disabled = !hasLayers;
+    previewTriggerBtn.disabled = !hasLayers;
+  }
+
+  // --- LAYER MANAGEMENT ---
+  addTextBtn.onclick = () => {
+    const val = textInputVal.value.trim();
+    if(!val) return;
+    const id = 'txt-' + Date.now();
+    layers.push({ id, type: 'text', text: val, color: '#111111', x: 50, y: 50, fontSize: 60, isLoading: false });
+    textInputVal.value = '';
+    selectedLayerId = id; 
+    render();
+  };
 
   imageUpload.addEventListener('change', async (e) => {
     const files = Array.from(e.target.files || []);
     for (const file of files) {
-      const id = 'img-' + Date.now() + Math.random().toString(36).substr(2, 5);
-      const newImg = { id, src: URL.createObjectURL(file), x: 100, y: 100, width: 300, height: 300, isLoading: true };
-      images.push(newImg);
+      const id = 'img-' + Date.now();
+      const tempUrl = URL.createObjectURL(file);
+      layers.push({ id, type: 'image', src: tempUrl, x: 20, y: 20, width: 200, height: 200, isLoading: true });
       render();
-
+      
       try {
         const formData = new FormData();
         formData.append('image_file', file);
-        formData.append('size', 'auto');
         const res = await fetch('https://api.remove.bg/v1.0/removebg', {
           method: 'POST', headers: { 'X-Api-Key': API_KEY }, body: formData
         });
         if (res.ok) {
           const blob = await res.blob();
-          const idx = images.findIndex(i => i.id === id);
-          if (idx !== -1) {
-            images[idx].src = URL.createObjectURL(blob);
-            images[idx].isLoading = false;
+          const idx = layers.findIndex(i => i.id === id);
+          if (idx !== -1) { 
+            layers[idx].src = URL.createObjectURL(blob); 
+            layers[idx].isLoading = false; 
           }
+        } else {
+            const idx = layers.findIndex(i => i.id === id);
+            layers[idx].isLoading = false; // Fallback to original if API fails
         }
-      } catch (err) { console.error(err); }
+      } catch (err) { 
+          console.error(err); 
+          const idx = layers.findIndex(i => i.id === id);
+          if(idx !== -1) layers[idx].isLoading = false;
+      }
       render();
     }
   });
@@ -224,138 +397,219 @@
     thumbsContainer.innerHTML = '';
     pageInner.innerHTML = '';
     
-    images.forEach((img, idx) => {
-      // Create Thumbnail with Gradient Card
+    layers.forEach((layer, idx) => {
+      // Thumbnails
       const thumb = document.createElement('div');
       thumb.className = 'thumb-item';
-      thumb.innerHTML = `
-        <div class="thumb-card">
-            <img src="${img.src}">
-        </div>
-        <button class="thumb-remove">✕</button>`;
-      
-      thumb.querySelector('.thumb-remove').onclick = () => {
-        images.splice(idx, 1);
-        render();
+      let thumbContent = '';
+      if(layer.type === 'text') thumbContent = `<div style="display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:10px;text-align:center;">${layer.text}</div>`;
+      else thumbContent = `<img src="${layer.src}">`;
+      thumb.innerHTML = `<div class="thumb-card">${thumbContent}</div><button class="thumb-remove">✕</button>`;
+      thumb.querySelector('.thumb-remove').onclick = (e) => { 
+          e.stopPropagation(); 
+          layers.splice(idx, 1); 
+          if(selectedLayerId === layer.id) {
+              selectedLayerId = null;
+              textControls.style.display = 'none';
+          }
+          render(); 
       };
       thumbsContainer.appendChild(thumb);
 
-      if (!img.isLoading) {
+      // Canvas Elements
+      if (!layer.isLoading) {
         const handle = document.createElement('div');
-        handle.className = 'img-handle';
-        handle.style.cssText = `left:${img.x}px; top:${img.y}px; width:${img.width}px; height:${img.height}px; z-index:${idx};`;
-        
-        const el = document.createElement('img');
-        el.src = img.src;
-        handle.appendChild(el);
-
-        const resizer = document.createElement('div');
-        resizer.className = 'resize-handle';
-        handle.appendChild(resizer);
-
+        if(layer.type === 'image') {
+          handle.className = 'img-handle';
+          handle.style.cssText = `left:${layer.x}px; top:${layer.y}px; width:${layer.width}px; height:${layer.height}px; z-index:${idx};`;
+          const el = document.createElement('img'); el.src = layer.src; handle.appendChild(el);
+          const resizer = document.createElement('div'); resizer.className = 'resize-handle'; handle.appendChild(resizer);
+          makeResizable(resizer, handle, layer);
+        } else if(layer.type === 'text') {
+          handle.className = 'text-handle';
+          const isSelected = selectedLayerId === layer.id;
+          handle.style.cssText = `left:${layer.x}px; top:${layer.y}px; color:${layer.color}; font-size:${layer.fontSize}px; font-weight:700; z-index:${idx}; ${isSelected ? 'outline: 2px dashed var(--gold); outline-offset: 4px;' : ''}`;
+          handle.innerText = layer.text;
+          handle.onclick = (e) => { 
+              e.stopPropagation(); 
+              selectedLayerId = layer.id; 
+              updateTextControls(layer); 
+              render(); 
+          };
+        }
         pageInner.appendChild(handle);
-        makeDraggable(handle, img);
-        makeResizable(resizer, handle, img);
+        makeDraggable(handle, layer);
       }
     });
-    downloadBtn.disabled = images.filter(i => !i.isLoading).length === 0;
+    updateSummary();
   }
 
-  function makeDraggable(el, img) {
+  function updateTextControls(layer) {
+    textControls.style.display = 'block';
+    const slider = document.getElementById('text-size-slider');
+    slider.value = layer.fontSize;
+    slider.oninput = () => { layer.fontSize = parseInt(slider.value); render(); };
+    document.querySelectorAll('#individual-colors .scheme-btn').forEach(btn => {
+      btn.onclick = () => { layer.color = btn.dataset.color; render(); };
+    });
+  }
+
+  function makeDraggable(el, layer) {
     let sx, sy, ox, oy;
     el.onmousedown = (e) => {
       if (e.target.className === 'resize-handle') return;
-      sx = e.clientX; sy = e.clientY; ox = img.x; oy = img.y;
+      sx = e.clientX; sy = e.clientY; ox = layer.x; oy = layer.y;
       document.onmousemove = (me) => {
-        img.x = ox + (me.clientX - sx);
-        img.y = oy + (me.clientY - sy);
-        el.style.left = img.x + 'px'; el.style.top = img.y + 'px';
+        layer.x = ox + (me.clientX - sx);
+        layer.y = oy + (me.clientY - sy);
+        el.style.left = layer.x + 'px'; el.style.top = layer.y + 'px';
       };
       document.onmouseup = () => document.onmousemove = null;
     };
   }
 
-  function makeResizable(resizer, el, img) {
+  function makeResizable(resizer, el, layer) {
     let sx, sw, sh;
     resizer.onmousedown = (e) => {
       e.stopPropagation();
-      sx = e.clientX; sw = img.width; sh = img.height;
+      sx = e.clientX; sw = layer.width; sh = layer.height;
       const ratio = sh / sw;
       document.onmousemove = (me) => {
-        img.width = Math.max(50, sw + (me.clientX - sx));
-        img.height = img.width * ratio;
-        el.style.width = img.width + 'px'; el.style.height = img.height + 'px';
+        layer.width = Math.max(40, sw + (me.clientX - sx));
+        layer.height = layer.width * ratio;
+        el.style.width = layer.width + 'px'; el.style.height = layer.height + 'px';
       };
       document.onmouseup = () => document.onmousemove = null;
     };
   }
 
-  downloadBtn.onclick = async () => {
-    const ready = images.filter(i => !i.isLoading);
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    
-    const loadedImages = await Promise.all(ready.map(imgObj => {
-        return new Promise((resolve) => {
-            const imgEl = new Image();
-            imgEl.crossOrigin = "anonymous";
-            imgEl.onload = () => resolve({el: imgEl, data: imgObj});
-            imgEl.src = imgObj.src;
-        });
-    }));
+// --- FINAL PREVIEW GENERATION ---
+  async function createStickerDesign() {
+      const ready = layers.filter(l => !l.isLoading);
+      const tempCanvas = document.createElement('canvas');
+      const tCtx = tempCanvas.getContext('2d');
+      
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      
+      // Calculate Bounds
+      for (const l of ready) {
+        let w, h;
+        if (l.type === 'text') {
+          tCtx.font = `700 ${l.fontSize}px 'Inter'`;
+          w = tCtx.measureText(l.text).width;
+          h = l.fontSize;
+        } else { w = l.width; h = l.height; }
+        minX = Math.min(minX, l.x); minY = Math.min(minY, l.y);
+        maxX = Math.max(maxX, l.x + w); maxY = Math.max(maxY, l.y + h);
+      }
 
-    loadedImages.forEach(item => {
-      minX = Math.min(minX, item.data.x); minY = Math.min(minY, item.data.y);
-      maxX = Math.max(maxX, item.data.x + item.data.width); maxY = Math.max(maxY, item.data.y + item.data.height);
-    });
+      const thickness = 8; 
+      const padding = thickness + 30;
+      tempCanvas.width = (maxX - minX) + (padding * 2);
+      tempCanvas.height = (maxY - minY) + (padding * 2);
 
-    const thickness = 14; 
-    const padding = thickness + 20;
-    const canvas = document.createElement('canvas');
-    canvas.width = (maxX - minX) + (padding * 2);
-    canvas.height = (maxY - minY) + (padding * 2);
-    const ctx = canvas.getContext('2d');
+      // 1. Create Shape Mask (Black)
+      const mask = document.createElement('canvas');
+      mask.width = tempCanvas.width; mask.height = tempCanvas.height;
+      const mCtx = mask.getContext('2d');
+      for (const l of ready) {
+        const rx = (l.x - minX) + padding;
+        const ry = (l.y - minY) + padding;
+        if (l.type === 'image') {
+          const img = new Image(); img.crossOrigin = "anonymous";
+          await new Promise(r => { img.onload = r; img.src = l.src; });
+          mCtx.drawImage(img, rx, ry, l.width, l.height);
+        } else {
+          mCtx.font = `700 ${l.fontSize}px 'Inter'`;
+          mCtx.textBaseline = 'top'; mCtx.fillStyle = 'black';
+          mCtx.fillText(l.text, rx, ry);
+        }
+      }
 
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tCtx = tempCanvas.getContext('2d');
+      // 2. Draw Thick White Border
+      for (let i = 0; i < 360; i += 15) {
+        tCtx.drawImage(mask, Math.cos(i * Math.PI / 180) * thickness, Math.sin(i * Math.PI / 180) * thickness);
+      }
+      tCtx.globalCompositeOperation = 'source-in';
+      tCtx.fillStyle = '#D9D9D9'; 
+      tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      tCtx.globalCompositeOperation = 'source-over';
 
-    loadedImages.forEach(item => {
-        const rx = (item.data.x - minX) + padding;
-        const ry = (item.data.y - minY) + padding;
-        tCtx.drawImage(item.el, rx, ry, item.data.width, item.data.height);
-    });
+      // 3. Draw Content
+      for (const l of ready) {
+        const rx = (l.x - minX) + padding;
+        const ry = (l.y - minY) + padding;
+        if (l.type === 'image') {
+          const img = new Image(); img.crossOrigin = "anonymous";
+          await new Promise(r => { img.onload = r; img.src = l.src; });
+          tCtx.drawImage(img, rx, ry, l.width, l.height);
+        } else {
+          tCtx.fillStyle = l.color;
+          tCtx.font = `700 ${l.fontSize}px 'Inter'`;
+          tCtx.textBaseline = 'top';
+          tCtx.fillText(l.text, rx, ry);
+        }
+      }
 
-    ctx.save();
-    // Use white for a clean sticker border
-    for (let angle = 0; angle < 360; angle += 10) {
-        const dx = Math.cos(angle * Math.PI / 180) * thickness;
-        const dy = Math.sin(angle * Math.PI / 180) * thickness;
-        ctx.drawImage(tempCanvas, dx, dy);
-    }
+      // --- ADD WATERMARK ---
+      tCtx.save();
+      tCtx.rotate(-25 * Math.PI / 180); // Diagonal angle
+      tCtx.font = "700 18px 'Inter'";
+      tCtx.fillStyle = "rgba(0, 0, 0, 0.15)"; // Soft transparent ink
+      tCtx.textAlign = "center";
+      
+      // Repeating grid to cover entire expanded canvas area
+      for (let x = -tempCanvas.width; x < tempCanvas.width * 2; x += 120) {
+          for (let y = -tempCanvas.height; y < tempCanvas.height * 2; y += 60) {
+              tCtx.fillText("PEAK PURPOSE", x, y);
+          }
+      }
+      tCtx.restore();
 
-    ctx.globalCompositeOperation = 'source-in';
-    ctx.fillStyle = 'white'; // White sticker border
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
+      return tempCanvas;
+  }
 
-    // Add a subtle drop shadow to the border
-    ctx.shadowColor = 'rgba(0,0,0,0.2)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetY = 4;
+  previewTriggerBtn.onclick = async () => {
+    const sticker = await createStickerDesign();
+    const finalCanvas = document.createElement('canvas');
+    const fCtx = finalCanvas.getContext('2d');
 
-    loadedImages.forEach(item => {
-        const rx = (item.data.x - minX) + padding;
-        const ry = (item.data.y - minY) + padding;
-        ctx.drawImage(item.el, rx, ry, item.data.width, item.data.height);
-    });
+    let baseW = 500, baseH = 500, isTag = false;
+    if (currentPlacement === "Car mirror Tag") { baseW = 300; baseH = 450; isTag = true; }
+    else if (currentPlacement === "Desk Poster") { baseW = 450; baseH = 550; }
+    else if (currentPlacement === "Door Poster") { baseW = 500; baseH = 750; }
 
-    const link = document.createElement('a');
-    link.download = 'unified-sticker.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    finalCanvas.width = baseW;
+    finalCanvas.height = baseH;
+
+    // Draw Background
+    fCtx.fillStyle = '#FFFFFF';
+    if(isTag) {
+        fCtx.beginPath(); fCtx.roundRect(0, 0, baseW, baseH, 30); fCtx.fill();
+        fCtx.globalCompositeOperation = 'destination-out';
+        fCtx.beginPath(); fCtx.arc(baseW/2, 45, 18, 0, Math.PI*2); fCtx.fill();
+        fCtx.globalCompositeOperation = 'source-over';
+    } else { fCtx.fillRect(0,0,baseW,baseH); }
+
+    // Fit Sticker
+    const scale = Math.min((baseW * 0.8) / sticker.width, (baseH * 0.7) / sticker.height);
+    const sw = sticker.width * scale;
+    const sh = sticker.height * scale;
+    fCtx.drawImage(sticker, (baseW-sw)/2, (baseH-sh)/2 + (isTag ? 30 : 0), sw, sh);
+
+    const previewImg = document.createElement('img');
+    previewImg.src = finalCanvas.toDataURL('image/png');
+    // Prevent dragging or saving via right-click
+    previewImg.setAttribute('draggable', 'false');
+    previewImg.oncontextmenu = (e) => e.preventDefault();
+
+    modalContainer.innerHTML = '';
+    modalContainer.appendChild(previewImg);
+    modal.style.display = 'flex';
   };
 
+  document.getElementById('close-modal').onclick = () => { modal.style.display = 'none'; };
+  window.submitOrder = () => alert("Great choice! Redirecting to secure checkout...");
 })();
 </script>
 </body>
